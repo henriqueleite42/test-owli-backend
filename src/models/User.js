@@ -9,7 +9,7 @@ const UserModel = new mongoose.Schema({
     maxlength: 20,
     unique: true,
     validate: {
-      validator: name => /^[a-z0-9_-]{3,20}$/.test(name)
+      validator: name => /^[a-zA-Z0-9_-]{3,20}$/.test(name)
     }
   },
   address: {
