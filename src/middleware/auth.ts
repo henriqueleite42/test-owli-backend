@@ -1,10 +1,23 @@
-const jwt = require('jsonwebtoken');
+// Dependencies
+import { Request, Response, NextFunction } from 'express'
+import jwt from 'jsonwebtoken'
 
+// Enable Environment Variables
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
-module.exports = (req, res, next) => {
+// Interfaces
+interface DecodedInterface {
+  id: string
+}
+
+// Auth System
+export default function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) res.json({ status: 401, msg: 'No Token Provided' });
@@ -19,10 +32,10 @@ module.exports = (req, res, next) => {
 
   if (!/Bearer/i.test(scheme)) res.json({ status: 401, msg: 'Token Malformated' });
 
-  jwt.verify(token, process.env.SECRET, (err, decoded) => {
+  jwt.verify(token, process.env.SECRET, (err, decoded: DecodedInterface) => {
     if (err) res.json({ status: 401, msg: 'Invalid Token' });
 
-    req.user = decoded.id;
+    req.body.USER = decoded.id;
 
     return next();
   })

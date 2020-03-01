@@ -1,7 +1,20 @@
-const mongoose = require('../config/db');
-const bcrypt = require('bcryptjs');
+// Dependencies
+import { NextFunction } from 'express'
+import db from '../config/db'
+import bcrypt from 'bcryptjs'
 
-const UserModel = new mongoose.Schema({
+// Interfaces
+interface UserInterface extends db.Document {
+  username: string,
+  address: string,
+  email: string,
+  phone: number,
+  password: string,
+  created: string
+}
+
+// Schema
+const UserSchema = new db.Schema({
   username: {
     type: String,
     required: true,
@@ -54,11 +67,12 @@ const UserModel = new mongoose.Schema({
   }
 }, { versionKey: false });
 
-UserModel.pre('save', async function(next) {
+// Pre Save
+UserSchema.pre('save', async function(next: NextFunction) {
   this.phone = this.phone.toString().replace(/[^0-9]/g, '');
   this.password = await bcrypt.hash(this.password, 10);
 
   next();
 });
 
-module.exports = mongoose.model('users', UserModel);
+export default db.model<UserInterface>('users', UserSchema)

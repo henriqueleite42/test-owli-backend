@@ -1,9 +1,12 @@
-const mongoose = require('mongoose');
+// Dependencies
+import mongoose from 'mongoose'
 
+// Enable Environment Variables
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
+// Database Connect
 mongoose.connect(
   'mongodb+srv://'+
   process.env.DB_USER+
@@ -18,4 +21,4 @@ mongoose.connect(
   }
 )
 
-module.exports = mongoose;
+export default mongoose
